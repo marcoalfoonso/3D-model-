@@ -1,8 +1,33 @@
 //Render robot
 
+//mqtt server connection
+
+const client = mqtt.connect("wss://e4f0d50b37b04ea79745872566f605ff.s1.eu.hivemq.cloud:8884/mqtt",{
+    clientId: "web_" + Math.random().toString(16).slice(2, 10),
+    username: "MarcoA",
+    password: "HATeR3__",
+    clean: true
+});
+
+console.log("Connecting to HiveMQ Claud...");
+
+client.on("connect", () => {
+  console.log("Connecting with Outh");
+
+  client.subscribe(["q1","q2","q3"], (err)=>{
+    if(!err){
+        console.log("Subscripcion en q1, q2 y q3 exitosa");
+    }else{
+        console.error("Error en subscripcion q1, q2 y q3:", err);
+    }
+    });
+});
+
+client.on("error", (err) => {
+  console.error("Error:", err);
+});
+
 //scene, camera, renderer
-
-
 document.addEventListener("DOMContentLoaded", function(){
 
     const renderer = new THREE.WebGLRenderer();
@@ -27,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function(){
     scene.add(axesHelper);
     camera.position.set(5,3,12.5);
 
-    const grid = new THREE.GridHelper(size=30, divisions=20);
+    const grid = new THREE.GridHelper(30,20);
     scene.add(grid);
 
     //box geometry, material, mesh, add to scene, position
@@ -48,9 +73,49 @@ document.addEventListener("DOMContentLoaded", function(){
     const l1 = 4.5;
     const l2 = 8.8;
 
-    let q1 = 0;
-    let q2 = 0;
-    let q3 = 0;
+    //retrieving values from sliders and publishing to mqtt topics
+
+    const g1 = document.getElementById("q1");
+    const g2 = document.getElementById("q2");
+    const g3 = document.getElementById("q3");
+
+    let lastSend = 0;
+    let lastSend2 = 0;
+    let lastSend3 = 0;
+
+    g1.addEventListener("input", function(){
+        const now = Date.now();
+
+        if(now - lastSend > 50 && client.connected){
+            client.publish("q1",g1.value,{retain:true});
+            lastSend = now;
+        }
+    });
+
+    g2.addEventListener("input", function(){
+        const now2 = Date.now();
+
+        if(now2 - lastSend2 > 50 && client.connected){
+            client.publish("q2",g2.value,{retain:true});
+            lastSend2 = now2;
+        }
+    });
+
+    g3.addEventListener("input", function(){
+        const now3 = Date.now();
+
+        if(now3 - lastSend3 > 50 && client.connected){
+            client.publish("q3",g3.value,{retain:true});
+            lastSend3 = now3;
+        }
+    });
+
+
+    let q1 = g1.value * Math.PI/180;
+    let q2 = g2.value * Math.PI/180;
+    let q3 = g3.value * Math.PI/180;
+
+    //forward kinematics
 
     let x1 = l1 * Math.cos(q1) * Math.cos(q2);
     let y1 = b1+b2+l1*Math.sin(q2);
@@ -59,6 +124,9 @@ document.addEventListener("DOMContentLoaded", function(){
     let x2 = Math.cos(q1)*(l2*Math.cos(q2+q3)+l1*Math.cos(q2));
     let y2 = b1+b2+l1*Math.sin(q2)+l2*Math.sin(q2+q3);
     let z2 = -Math.sin(q1)*(l2*Math.cos(q2+q3)+l1*Math.cos(q2));
+
+
+    //creating vectores for points and lines
 
     const base = new THREE.Vector3(0,0,0);
     const p1 = new THREE.Vector3(0,b1+b2,0);
@@ -102,9 +170,6 @@ document.addEventListener("DOMContentLoaded", function(){
     scene.add(line3);
 
     function animate(){
-        q1 += 0.01;
-        q2 += 0.01;
-        q3 += 0.01;
 
         x1 = l1 * Math.cos(q1) * Math.cos(q2);
         y1 = b1+b2+l1*Math.sin(q2);
@@ -123,8 +188,28 @@ document.addEventListener("DOMContentLoaded", function(){
 
         renderer.render(scene,camera);
     }
-    
 
+
+    client.on("message",(topic,message)=>{
+        const value = Number(message.toString());
+        console.log("Topic: ",topic,"Value: ",value);
+
+        if(topic === "q1"){
+            g1.value = value;
+            q1 = g1.value * Math.PI/180;
+        }
+
+        if(topic === "q2"){
+            g2.value = value;
+            q2 = g2.value * Math.PI/180;
+        }
+
+        if(topic === "q3"){
+            g3.value = value;
+            q3 = g3.value * Math.PI/180;
+        }
+
+    });
 
     renderer.setAnimationLoop(animate);
 

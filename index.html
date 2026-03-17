@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="design.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -15,11 +16,11 @@
 
         <div class="main">
             <label for="q1">q1(°)</label>
-            <input type="range" name="q1" id="q1" min="-180" max="180" value="0">
+            <input type="range" name="q1" id="q1" min="0" max="180">
             <label for="q2">q2(°)</label>
-            <input type="range" name="q2" id="q2" min="-180" max="180" value="0">
+            <input type="range" name="q2" id="q2" min="0" max="180">
             <label for="q3">q3(°)</label>
-            <input type="range" name="q3" id="q3" min="-180" max="180" value="0">
+            <input type="range" name="q3" id="q3" min="0" max="180">
         </div>
 
         <script src="design.js"></script>
