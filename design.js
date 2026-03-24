@@ -63,10 +63,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     scene.add( cube );
 
-
-    //adding a line1
-
-    //assessing zyz from joint 2
+    //constants for kinematics
 
     const b1 = 3.8;
     const b2 = 2.3;
