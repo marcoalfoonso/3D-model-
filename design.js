@@ -65,10 +65,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
     //constants for kinematics
 
-    const b1 = 3.8;
-    const b2 = 2.3;
-    const l1 = 4.5;
-    const l2 = 8.8;
+    const b1 = 0.38;
+    const b2 = 0.23;
+    const l1 = 0.45;
+    const l2 = 0.88;
 
     //retrieving values from sliders and publishing to mqtt topics
 
