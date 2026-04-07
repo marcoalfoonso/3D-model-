@@ -23,8 +23,21 @@
             <input type="range" name="q3" id="q3" min="0" max="180">
         </div>
 
+        <div id="scope"></div>
+
+        <div id="camera">
+            <img id="stream">
+        </div>
+
         <script src="design.js"></script>
+
     </div>
+
+    <script>
+        setInterval(() => {
+            document.getElementById("stream").src = "http://192.168.64.202:8000/latest?=" + new Date().getTime();
+        }, 500);
+    </script>
     
 </body>
 </html>

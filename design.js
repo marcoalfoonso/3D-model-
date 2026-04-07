@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     const renderer = new THREE.WebGLRenderer();
 
-    renderer.setSize(window.innerWidth*0.75,window.innerHeight*0.75);
+    renderer.setSize(window.innerWidth*0.40,window.innerHeight*0.65);
 
     document.body.appendChild(renderer.domElement);
 
@@ -48,16 +48,16 @@ document.addEventListener("DOMContentLoaded", function(){
 
     //axis helper, comera position, grid helper
 
-    const axesHelper = new THREE.AxesHelper(14);
+    const axesHelper = new THREE.AxesHelper(1.4);
     scene.add(axesHelper);
-    camera.position.set(5,3,12.5);
+    camera.position.set(2,1,2);
 
-    const grid = new THREE.GridHelper(30,20);
+    const grid = new THREE.GridHelper(3,2);
     scene.add(grid);
 
     //box geometry, material, mesh, add to scene, position
 
-    const geometry = new THREE.BoxGeometry(0.5,0.5,0.5);
+    const geometry = new THREE.BoxGeometry(0.05,0.05,0.05);
     const material = new THREE.MeshBasicMaterial( { color: 0x00ff00,wireframe:true } );
     const cube = new THREE.Mesh( geometry, material );
 
