@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="design.css">
+    <link rel="stylesheet" href="/static/design.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <title>Document</title>
@@ -29,13 +29,13 @@
             <img id="stream">
         </div>
 
-        <script src="design.js"></script>
+        <script src="/static/design.js"></script>
 
     </div>
 
     <script>
         setInterval(() => {
-            document.getElementById("stream").src = "https://threed-model-1-bejy.onrender.com/latest?=" + new Date().getTime();
+            document.getElementById("stream").src = "/latest?=" + new Date().getTime();
         }, 200);
     </script>
     
