@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     const axesHelper = new THREE.AxesHelper(1.4);
     scene.add(axesHelper);
-    camera.position.set(2,1,2);
+    camera.position.set(0.5,10,3);
 
     const grid = new THREE.GridHelper(3,2);
     scene.add(grid);
@@ -166,6 +166,60 @@ document.addEventListener("DOMContentLoaded", function(){
     scene.add(line2);
     scene.add(line3);
 
+    //create joint links
+
+    const link1 = createLink(0.02, 0xff0000);
+    const link2 = createLink(0.02, 0x00ff00);
+    const link3 = createLink(0.02, 0x0000ff);
+
+    //create fuction fot joint links
+
+    function createLink(radius, color){
+
+        const geometry = new THREE.CylinderGeometry(
+            radius,
+            radius,
+            1,
+            16
+        );
+
+        const material = new THREE.MeshBasicMaterial({
+            color: color
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+
+        scene.add(mesh);
+
+        return mesh;
+    }
+
+    //update joint position and orientation
+
+    function updateLink(mesh, start, end){
+
+        const direction = new THREE.Vector3()
+            .subVectors(end, start);
+
+        const length = direction.length();
+
+        // midpoint position
+        const midpoint = new THREE.Vector3()
+            .addVectors(start, end)
+            .multiplyScalar(0.5);
+
+        mesh.position.copy(midpoint);
+
+        // scale length
+        mesh.scale.set(1, length, 1);
+
+        // rotate to align
+        mesh.quaternion.setFromUnitVectors(
+            new THREE.Vector3(0,1,0),
+            direction.clone().normalize()
+    );
+}
+
     function animate(){
 
         x1 = l1 * Math.cos(q1) * Math.cos(q2);
@@ -180,8 +234,9 @@ document.addEventListener("DOMContentLoaded", function(){
         ef.set(x2,y2,z2);
 
         line.geometry.setFromPoints([base,ef]);
-        line2.geometry.setFromPoints([p1,p2]);
-        line3.geometry.setFromPoints([p2,ef]);
+        updateLink(link1, base, p1);
+        updateLink(link2, p1, p2);
+        updateLink(link3, p2, ef);
 
         renderer.render(scene,camera);
     }
