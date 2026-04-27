@@ -26,7 +26,7 @@
         <div id="scope"></div>
 
         <div id="camera">
-            <img id="stream">
+            <img id="stream" src="https://post-image-j0l5.onrender.com/image" width="640">
         </div>
 
         <script src="/static/design.js?v=3"></script>
@@ -34,9 +34,17 @@
     </div>
 
     <script>
-        setInterval(() => {
-            document.getElementById("stream").src = "/latest?=" + new Date().getTime();
-        }, 500);
+        function actualizarImagen() {
+
+            const img = document.getElementById("stream");
+
+            // Evita que el navegador use cache
+            img.src = "https://post-image-j0l5.onrender.com/image?t=" + new Date().getTime();
+
+        }
+
+        // actualizar cada 500 ms
+        setInterval(actualizarImagen, 500);
     </script>
     
 </body>
