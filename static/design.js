@@ -48,16 +48,16 @@ document.addEventListener("DOMContentLoaded", function(){
 
     //axis helper, comera position, grid helper
 
-    const axesHelper = new THREE.AxesHelper(1.4);
-    scene.add(axesHelper);
-    camera.position.set(0.5,10,3);
+    /*const axesHelper = new THREE.AxesHelper(1.4);
+    scene.add(axesHelper);*/
+    camera.position.set(0.8,0.7,1.8);
 
-    const grid = new THREE.GridHelper(3,2);
+    const grid = new THREE.GridHelper(3,8);
     scene.add(grid);
 
     //box geometry, material, mesh, add to scene, position
 
-    const geometry = new THREE.BoxGeometry(0.05,0.05,0.05);
+    const geometry = new THREE.BoxGeometry(0.1,0.1,0.1);
     const material = new THREE.MeshBasicMaterial( { color: 0x00ff00,wireframe:true } );
     const cube = new THREE.Mesh( geometry, material );
 
@@ -168,9 +168,32 @@ document.addEventListener("DOMContentLoaded", function(){
 
     //create joint links
 
-    const link1 = createLink(0.02, 0xff0000);
+    const link1 = createLink(0.06, 0xff0000);
     const link2 = createLink(0.02, 0x00ff00);
     const link3 = createLink(0.02, 0x0000ff);
+
+    //create joints
+
+    const j0 = createJoint(0.03, 0xffffff);
+    const j1 = createJoint(0.03, 0xffffff);
+    const j2 = createJoint(0.03, 0xffffff);
+    const j3 = createJoint(0.03, 0xffffff);
+
+
+    //base
+
+    
+    /*const length = 12, width = 8;
+    const shape = new THREE.Shape();
+    shape.moveTo( 0,0 );
+    shape.lineTo( 0, width );
+    shape.lineTo( length, width );
+    shape.lineTo( length, 0 );
+    shape.lineTo( 0, 0 );
+    const geometry = new THREE.ExtrudeGeometry( shape );
+    const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+    const mesh = new THREE.Mesh( geometry, material ) ;
+    scene.add( mesh );*/
 
     //create fuction fot joint links
 
@@ -217,8 +240,25 @@ document.addEventListener("DOMContentLoaded", function(){
         mesh.quaternion.setFromUnitVectors(
             new THREE.Vector3(0,1,0),
             direction.clone().normalize()
-    );
-}
+        );
+    }
+
+    //function to create joints
+
+    function createJoint(radius, color){
+
+        const geometry = new THREE.SphereGeometry(radius, 16, 16);
+
+        const material = new THREE.MeshBasicMaterial({
+            color: color
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+
+        scene.add(mesh);
+
+        return mesh;
+    }
 
     function animate(){
 
@@ -237,6 +277,11 @@ document.addEventListener("DOMContentLoaded", function(){
         updateLink(link1, base, p1);
         updateLink(link2, p1, p2);
         updateLink(link3, p2, ef);
+
+        j0.position.copy(base);
+        j1.position.copy(p1);
+        j2.position.copy(p2);
+        j3.position.copy(ef);
 
         renderer.render(scene,camera);
     }
